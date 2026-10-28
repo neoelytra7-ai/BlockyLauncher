@@ -8,6 +8,7 @@ import android.graphics.Canvas
 import android.os.Bundle
 import android.util.Base64
 import android.webkit.JavascriptInterface
+import android.webkit.WebChromeClient
 import android.webkit.WebView
 import org.json.JSONArray
 import org.json.JSONObject
@@ -21,6 +22,8 @@ class MainActivity : Activity() {
         super.onCreate(b)
         web = WebView(this)
         web.settings.javaScriptEnabled = true
+        web.settings.domStorageEnabled = true
+        web.webChromeClient = WebChromeClient()
         web.addJavascriptInterface(Bridge(), "Bridge")
         setContentView(web)
         web.loadUrl("file:///android_asset/index.html")
@@ -53,10 +56,11 @@ class MainActivity : Activity() {
                 .filter { it.activityInfo.packageName != packageName }
                 .sortedBy { it.loadLabel(pm).toString().lowercase() }
                 .forEach {
-                    val bmp = Bitmap.createBitmap(16, 16, Bitmap.Config.ARGB_8888)
+                    val big = Bitmap.createBitmap(96, 96, Bitmap.Config.ARGB_8888)
                     val d = it.loadIcon(pm)
-                    d.setBounds(0, 0, 16, 16)
-                    d.draw(Canvas(bmp))
+                    d.setBounds(0, 0, 96, 96)
+                    d.draw(Canvas(big))
+                    val bmp = Bitmap.createScaledBitmap(big, 24, 24, true)
                     val o = ByteArrayOutputStream()
                     bmp.compress(Bitmap.CompressFormat.PNG, 100, o)
                     arr.put(

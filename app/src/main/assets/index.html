@@ -67,12 +67,12 @@ input:focus{caret-color:#7dff7d;animation:blink 1s steps(2) infinite}
 <div id="load"><div id="lt"></div><div class="pb" id="pb"></div></div>
 <script>
 let APPS=[];
-try{APPS=JSON.parse(Bridge.getApps()).map(a=>[a.n,a.i,"#8b8b8b",a.c,a.p])}catch(e){APPS=[["Telepon","📞","#7bdc8c","Dasar"],["Peta","🗺️","#8ee0c0","Jalan"],["Musik","🎧","#c79bff","Fun"],["Catatan","📝","#fff07b","Kerja"],["Kamera","📷","#ff8fab","Dasar"]]}
+try{APPS=JSON.parse(Bridge.getApps()).map(a=>[a.n,a.i,"#8b8b8b",a.c,a.p]);if(!APPS.length)throw "0 app terbaca dari sistem"}catch(e){if(typeof Bridge!="undefined")alert("Bridge error: "+e);APPS=[["Telepon","📞","#7bdc8c","Dasar"],["Peta","🗺️","#8ee0c0","Jalan"],["Musik","🎧","#c79bff","Fun"],["Catatan","📝","#fff07b","Kerja"],["Kamera","📷","#ff8fab","Dasar"]]}
 const DOCK=APPS.slice(0,5).map(a=>a[0]);
 const TABS=["Semua","Dasar","Jalan","Fun","Kerja"];
 let tab="Semua",sel="";
 const $=id=>document.getElementById(id);
-const tile=(a,i)=>`<button class="app${a[0]==sel?" sel":""}" data-n="${a[0]}" data-c="${a[2]}" style="--i:${i}"><div class="tip">${a[0]}</div><div class="slot"><em>${a[1].startsWith("data:")?`<img src="${a[1]}">`:a[1]}</em></div><span>${a[0]}</span></button>`;
+const tile=(a,i)=>`<button class="app${a[0]==sel?" sel":""}" data-n="${a[0]}" data-c="${a[2]}" style="--i:${i}"><div class="tip">${a[0]}</div><div class="slot"><em>${a[1].startsWith("data:")?`<img alt="${a[0][0]}" onerror="this.replaceWith(this.alt)" src="${a[1]}">`:a[1]}</em></div><span>${a[0]}</span></button>`;
 function render(){const q=$("q").value.toLowerCase();
  $("tabs").innerHTML=TABS.map(t=>`<button class="${t==tab?"on":""}" data-t="${t}">${t}</button>`).join("");
  const l=APPS.filter(a=>(tab=="Semua"||a[3]==tab)&&a[0].toLowerCase().includes(q));
