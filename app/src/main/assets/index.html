@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Blocky Home – Launcher</title>
+<style>@font-face{font-family:VT323;src:url(VT323.ttf)}.slot em img{width:36px;height:36px}.hotbar .slot em img{width:44px;height:44px}.fly-item img{width:34px;height:34px}</style>
+<style>
+:root{--sky1:#79b8ff;--sky2:#bfe0ff;--cloud:#fff;--sun:#ffe94d;--grass:#5da130;--grass2:#478a1e;--dirt:#7a5230;--dirt2:#6b4526;--panel:#c6c6c6;--hi:#fff;--lo:#555;--txt:#3f3f3f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--sky1:#0b1030;--sky2:#26306b;--cloud:#4a5290;--sun:#e8ecff}}
+:root[data-theme="dark"]{--sky1:#0b1030;--sky2:#26306b;--cloud:#4a5290;--sun:#e8ecff}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;image-rendering:pixelated}
+html,body{height:100%;margin:0;overflow:hidden}
+body{font:22px/1 VT323,"Courier New",monospace;background:linear-gradient(var(--sky1),var(--sky2));color:var(--txt);display:flex;justify-content:center}
+.cloud{position:fixed;left:-120px;width:48px;height:16px;background:var(--cloud);box-shadow:16px -16px 0 var(--cloud),32px 0 0 var(--cloud),48px 0 0 var(--cloud),-16px 0 0 var(--cloud);animation:drift 40s linear infinite;opacity:.9}
+@keyframes drift{to{transform:translateX(120vw)}}
+#sun{position:fixed;right:22px;top:calc(18px + env(safe-area-inset-top,0px));width:44px;height:44px;background:var(--sun);box-shadow:0 0 0 6px color-mix(in srgb,var(--sun) 40%,transparent);border:0;cursor:pointer;animation:spin 20s steps(8) infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#app{position:relative;width:100%;max-width:440px;height:100%;display:flex;flex-direction:column;gap:10px;padding:16px 14px 0}
+h1{position:relative;margin:0;font-size:56px;line-height:.9;color:#fff;text-shadow:4px 4px 0 #3a3a3a;letter-spacing:2px;animation:in .5s steps(6) backwards}.splash{position:absolute;right:-4px;bottom:-14px;font-size:22px;color:#ff0;text-shadow:2px 2px 0 #3f3f00;transform:rotate(-14deg);animation:pulse .6s ease-in-out infinite alternate;letter-spacing:0}@keyframes pulse{to{transform:rotate(-14deg) scale(1.2)}}
+.panel{background:var(--panel);border:4px solid;border-color:var(--hi) var(--lo) var(--lo) var(--hi);outline:4px solid #000;padding:10px;flex:1;min-height:0;display:flex;flex-direction:column;gap:8px}
+.tabs{display:flex;gap:4px;overflow-x:auto}
+.tabs button{font:inherit;color:var(--txt);background:#a0a0a0;border:4px solid;border-color:var(--hi) var(--lo) var(--lo) var(--hi);padding:4px 10px;cursor:pointer;transition:transform .08s}
+.tabs button.on{background:var(--panel);transform:translateY(2px);border-color:#000 #000 var(--panel) #000;color:#000}
+input{font:inherit;width:100%;padding:6px 10px;background:#000;color:#fff;border:4px solid;border-color:var(--lo) var(--hi) var(--hi) var(--lo);outline:0}
+input:focus{caret-color:#7dff7d;animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{background:#111}}
+.grid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;align-content:start;padding:2px}
+.app{background:none;border:0;padding:0;font:inherit;color:#222;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;position:relative;animation:in .35s steps(5) backwards;animation-delay:calc(var(--i)*35ms)}
+@keyframes in{from{transform:scale(0)}to{transform:scale(1)}}
+.slot{width:100%;aspect-ratio:1;background:#8b8b8b;border:4px solid;border-color:var(--lo) var(--hi) var(--hi) var(--lo);display:grid;place-items:center;transition:background .08s,transform .15s cubic-bezier(.3,1.8,.5,1),box-shadow .15s}
+.slot em{font-style:normal;font-size:34px;display:block;animation:bob 2.2s ease-in-out infinite;animation-delay:calc(var(--i)*-.3s);filter:drop-shadow(3px 3px 0 rgba(0,0,0,.35))}
+@keyframes bob{50%{transform:translateY(-4px) rotate(6deg)}}
+.app:hover .slot{background:#b5b5c9;transform:scale(1.14) rotate(-2deg);box-shadow:inset 0 0 0 4px rgba(255,255,255,.6),0 0 18px 4px rgba(255,255,255,.55);z-index:3}.app:hover .slot em{animation-duration:.5s;font-size:40px}
+.app:active .slot em{animation:none;transform:scale(.8)}
+.app:active .slot{background:#6f6f6f;transform:scale(.88)}
+.app span{font-size:20px;white-space:nowrap;color:#fff;text-shadow:2px 2px 0 #3f3f3f}
+.tip{position:absolute;bottom:105%;left:50%;transform:translateX(-50%);background:#100010;color:#fff;border:3px solid #2a0a5e;padding:3px 8px;white-space:nowrap;pointer-events:none;opacity:0;z-index:5;font-size:20px}
+.app:hover .tip{opacity:1;animation:tp .25s cubic-bezier(.3,1.8,.5,1)}@keyframes tp{from{transform:translateX(-50%) translateY(8px) scale(.5)}}
+.hotbar{display:flex;gap:0;background:#2b2b2b;border:4px solid #000;margin:0 auto;width:100%}
+.hotbar .app{flex:1;animation:none}
+.hotbar .slot{border-color:#373737 #8b8b8b #8b8b8b #373737;background:#555;border-width:3px}
+.hotbar .app.sel .slot{outline:4px solid #fff;outline-offset:-4px;z-index:2;transform:scale(1.12);box-shadow:0 0 22px 6px rgba(255,255,255,.55);animation:sel .5s steps(2) infinite}
+@keyframes sel{50%{outline-color:#ddd}}
+.hotbar .app span,.hotbar .tip{display:none}.hotbar .slot em{font-size:42px}
+.ground{height:calc(56px + env(safe-area-inset-bottom,0px));margin:0 -14px;background:linear-gradient(var(--grass) 0 12px,var(--grass2) 12px 16px,transparent 16px),linear-gradient(45deg,var(--dirt2) 25%,transparent 25%,transparent 75%,var(--dirt2) 75%),linear-gradient(45deg,var(--dirt2) 25%,var(--dirt) 25%,var(--dirt) 75%,var(--dirt2) 75%);background-size:100% 100%,16px 16px,16px 16px;background-position:0 0,0 0,8px 8px;flex:none}
+.shake{animation:shake .25s}@keyframes shake{25%{transform:translate(-5px,3px)}50%{transform:translate(5px,-4px)}75%{transform:translate(-3px,2px)}}.fly-item{position:fixed;z-index:25;font-size:34px;pointer-events:none;transition:transform .6s cubic-bezier(.5,-.4,.7,1),opacity .6s}
+.p{position:fixed;width:10px;height:10px;pointer-events:none;z-index:20;animation:fly .65s cubic-bezier(.2,.7,.6,1) forwards}
+@keyframes fly{to{transform:translate(var(--dx),var(--dy)) rotate(var(--r));opacity:0}}
+#load{position:fixed;inset:0;z-index:30;background:var(--dirt);background-image:linear-gradient(45deg,var(--dirt2) 25%,transparent 25% 75%,var(--dirt2) 75%);background-size:32px 32px;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#fff;text-shadow:2px 2px 0 #000;font-size:28px}
+#load.on{display:flex;animation:wipe .45s ease-out}
+@keyframes wipe{from{clip-path:circle(0% at 50% 85%)}to{clip-path:circle(150% at 50% 85%)}}
+.pb{display:flex;gap:3px;border:4px solid #000;padding:3px;background:#222}
+.pb i{width:16px;height:16px;background:#333}.pb i.f{background:#7dff7d}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<div class="cloud" style="top:12%;animation-delay:-8s"></div><div class="cloud" style="top:26%;animation-duration:60s;animation-delay:-30s;transform:scale(1.5)"></div>
+<button id="sun" aria-label="Ganti siang/malam"></button>
+<div id="app">
+  <h1>Blocky Home<small class="splash">Tap me!</small></h1>
+  <div class="panel">
+    <input id="q" placeholder="Cari app…" aria-label="Cari app">
+    <div class="tabs" id="tabs"></div>
+    <div class="grid" id="grid"></div>
+  </div>
+  <div class="hotbar" id="dock"></div>
+  <div class="ground"></div>
+</div>
+<div id="load"><div id="lt"></div><div class="pb" id="pb"></div></div>
+<script>
+let APPS=[];
+try{APPS=JSON.parse(Bridge.getApps()).map(a=>[a.n,a.i,"#8b8b8b",a.c,a.p])}catch(e){APPS=[["Telepon","📞","#7bdc8c","Dasar"],["Peta","🗺️","#8ee0c0","Jalan"],["Musik","🎧","#c79bff","Fun"],["Catatan","📝","#fff07b","Kerja"],["Kamera","📷","#ff8fab","Dasar"]]}
+const DOCK=APPS.slice(0,5).map(a=>a[0]);
+const TABS=["Semua","Dasar","Jalan","Fun","Kerja"];
+let tab="Semua",sel="";
+const $=id=>document.getElementById(id);
+const tile=(a,i)=>`<button class="app${a[0]==sel?" sel":""}" data-n="${a[0]}" data-c="${a[2]}" style="--i:${i}"><div class="tip">${a[0]}</div><div class="slot"><em>${a[1].startsWith("data:")?`<img src="${a[1]}">`:a[1]}</em></div><span>${a[0]}</span></button>`;
+function render(){const q=$("q").value.toLowerCase();
+ $("tabs").innerHTML=TABS.map(t=>`<button class="${t==tab?"on":""}" data-t="${t}">${t}</button>`).join("");
+ const l=APPS.filter(a=>(tab=="Semua"||a[3]==tab)&&a[0].toLowerCase().includes(q));
+ $("grid").innerHTML=l.map(tile).join("")||"<p>Tidak ada app. Coba kata lain.</p>";
+ $("dock").innerHTML=DOCK.map(n=>APPS.find(a=>a[0]==n)).map(tile).join("")}
+function blip(f){try{const c=new (window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();
+ o.type="square";o.frequency.value=f;g.gain.value=.05;g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.15);
+ o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.15)}catch(e){}}
+function burst(x,y,col){for(let i=0;i<20;i++){const p=document.createElement("div");p.className="p";
+ p.style.cssText=`left:${x}px;top:${y}px;background:${i%3?col:"#6b4526"};--dx:${(Math.random()-.5)*130}px;--dy:${-30+Math.random()*90}px;--r:${Math.random()*360}deg`;
+ document.body.appendChild(p);setTimeout(()=>p.remove(),700)}}
+function launch(n){const pb=$("pb");pb.innerHTML="<i></i>".repeat(10);$("lt").textContent="Memuat "+n+"…";$("load").classList.add("on");
+ let k=0;const t=setInterval(()=>{pb.children[k++]?.classList.add("f");if(k>10){clearInterval(t);setTimeout(()=>$("load").classList.remove("on"),250)}},90)}
+function fx(a){try{navigator.vibrate(15)}catch(e){}
+const ap=$("app");ap.classList.remove("shake");void ap.offsetWidth;ap.classList.add("shake");
+const r=a.getBoundingClientRect(),h=$("dock").getBoundingClientRect(),f=document.createElement("div");
+f.className="fly-item";f.innerHTML=a.querySelector("em").innerHTML;f.style.left=r.left+r.width/2-17+"px";f.style.top=r.top+"px";document.body.appendChild(f);
+requestAnimationFrame(()=>{f.style.transform=`translate(${h.left+h.width/2-r.left-r.width/2}px,${h.top-r.top}px) scale(.4) rotate(360deg)`;f.style.opacity=.2});
+setTimeout(()=>f.remove(),650)}
+document.addEventListener("click",e=>{
+ const a=e.target.closest(".app"),t=e.target.closest("[data-t]");
+ if(a){sel=a.dataset.n;const r=a.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,a.dataset.c);blip(330+Math.random()*220);fx(a);
+  document.querySelectorAll(".sel").forEach(x=>x.classList.remove("sel"));
+  document.querySelectorAll(`.hotbar [data-n="${sel}"]`).forEach(x=>x.classList.add("sel"));launch(sel);setTimeout(()=>{try{Bridge.launch(APPS.find(x=>x[0]==sel)[4])}catch(e){}},800)}
+ else if(t){tab=t.dataset.t;blip(220);render()}});
+$("q").addEventListener("input",render);
+$("sun").onclick=()=>{const r=document.documentElement,d=getComputedStyle(r).getPropertyValue("--sky1").trim()=="#0b1030";r.dataset.theme=d?"light":"dark";blip(440)};
+render();
+</script></body></html>
